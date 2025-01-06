@@ -3,6 +3,23 @@
 ## Solution - C. Ingredient Optimisation
 
 ### 1. What are the standard ingredients for each pizza?
+```sql
+WITH recipe AS (
+SELECT 
+  pizza_id,
+  UNNEST(STRING_TO_ARRAY(toppings, ', ')::INT[]) AS toppings
+FROM pizza_runner.pizza_recipes
+)
+
+SELECT 
+  pizza_name, STRING_AGG(topping_name, ', ')
+FROM recipe AS r
+INNER JOIN pizza_runner.pizza_toppings AS t
+  ON t.topping_id = r.toppings
+INNER JOIN pizza_runner.pizza_names AS n
+  ON r.pizza_id = n.pizza_id
+GROUP BY pizza_name
+```
 
 ### 2. What was the most commonly added extra?
 
